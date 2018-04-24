@@ -8,26 +8,20 @@ import { Title, Meta, MetaDefinition } from '@angular/platform-browser';
   styles: []
 })
 export class BreadcrumbsComponent implements OnInit {
+  pagina: string = '';
 
-  pagina: String = '';
+  constructor(private router: Router, public title: Title, public meta: Meta) {
+    this.getDataRoute().subscribe(data => {
+      this.pagina = data.titulo;
+      this.title.setTitle(this.pagina);
 
-  constructor(
-    private router: Router,
-    public title: Title,
-    public meta: Meta) {
-    this.getDataRoute()
-      .subscribe(data => {
-        this.pagina = data.titulo;
-        this.title.setTitle(this.pagina);
+      let metaTag: MetaDefinition = {
+        name: 'description',
+        content: this.pagina
+      };
 
-        let metaTag: MetaDefinition = {
-          name: 'description',
-          content: this.pagina
-        };
-
-        this.meta.updateTag(metaTag);
-
-      });
+      this.meta.updateTag(metaTag);
+    });
   }
 
   getDataRoute() {
@@ -37,6 +31,5 @@ export class BreadcrumbsComponent implements OnInit {
       .map((evento: ActivationEnd) => evento.snapshot.data);
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }
